@@ -3,10 +3,12 @@ import os
 from flask import Flask, request, current_app
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
+from flask_googlecharts import GoogleCharts
 from config import Config
 
 bootstrap = Bootstrap()
 moment = Moment()
+charts = GoogleCharts()
 
 
 def create_app(config_class=Config):
@@ -15,6 +17,7 @@ def create_app(config_class=Config):
 
     bootstrap.init_app(app)
     moment.init_app(app)
+    charts.init_app(app)
 
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
