@@ -11,11 +11,11 @@ class Reaction:
     def __repr__(self):
         return '<Reaction for {}>'.format(self.id)
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, name):
+        self.id = name
 
     def up_received(self):
-        self.num_received = self.num_received + 1
+        self.num_received += 1
 
     def up_given(self):
         self.num_given += 1
@@ -28,28 +28,26 @@ class Reaction:
 
 
 class Person:
-    id = ''
-    heart = Reaction('heart')
-    laugh = Reaction('laugh')
-    cry = Reaction('cry')
-    wow = Reaction('wow')
-    angry = Reaction('angry')
-    thumbs_up = Reaction('thumbs_up')
-    thumbs_down = Reaction('thumbs_down')
-    num_comments = 0
-    num_deleted = 0
-
     def __repr__(self):
         return '<Person  {}>'.format(self.id)
 
     def __init__(self, id):
         self.id = id
+        self.heart = Reaction('heart')
+        self.laugh = Reaction('laugh')
+        self.cry = Reaction('cry')
+        self.wow = Reaction('wow')
+        self.angry = Reaction('angry')
+        self.thumbs_up = Reaction('thumbs_up')
+        self.thumbs_down = Reaction('thumbs_down')
+        self.num_comments = 0
+        self.num_deleted = 0
 
     def up_comments(self):
-        self.num_comments = self.num_comments + 1
+        self.num_comments += 1
 
     def up_deleted(self):
-        self.num_deleted = self.num_deleted + 1
+        self.num_deleted += 1
 
 
 class ReactCounter:

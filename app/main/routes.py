@@ -6,9 +6,8 @@ from flask import render_template, flash, redirect, url_for, request, g, \
 from app.main.forms import FacebookChatUpload
 from app.main import bp
 from app.classes import Person, Reaction, ReactCounter
-from app. helper import react_classifier, react_compare
+from app.helper import react_classifier, react_compare, react_chart_row_filler
 from werkzeug.utils import secure_filename
-from flask_googlecharts import GoogleCharts
 
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -19,6 +18,8 @@ def home():
         filenames = []
         names = request.files.getlist(form.json_facebook_file.name)
         for file in form.json_facebook_file.data:
+            if 'json'not in str(file.filename):
+                return redirect(url_for('main.readme'))
             file_names = secure_filename(file.filename)
             bleh = file.stream.read()
             stringbleh = bleh.decode("utf-8")
@@ -37,6 +38,7 @@ def readme():
 def results():
     list_of_people = []
     list_results = []
+    messages = None
     messages = []
     react_types = ['thumbs_up', 'angry', 'wow', 'laugh', 'cry', 'heart']
     for filename in os.listdir(current_app.config['UPLOAD_FOLDER']):
@@ -49,6 +51,7 @@ def results():
             for member in participants:
                 list_of_people.append(member.get('name'))
             list_of_people = list(set(list_of_people))
+        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
     for person in list_of_people:
         profile = Person(person)
         list_results.append(profile)
@@ -56,7 +59,8 @@ def results():
     for message in messages:
         for each in list_results:
             if message.get('sender_name') in each.id:
-                if message.get('content'):
+                if message.get('content') or message.get('photos') or message.get('videos') or message.get(
+                        'gifs') or message.get('sticker') or message.get('audio_files') or message.get('files'):
                     # updating how many messages were sent
                     each.up_comments()
                     reacts = message.get('reactions')
@@ -81,8 +85,33 @@ def results():
                 else:
                     # update how many messages were deleted
                     each.up_deleted()
-    os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
-    # Feeding Data into Google Charts
+    # os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
-    return render_template('readme.html', title='Your Chat')
+    member_values = []
+    heart_values = []
+    laugh_values = []
+    wow_values = []
+    cry_values = []
+    angry_values = []
+    thumbs_up_values = []
+    thumbs_down_values = []
+    pie_delete_values = []
+    pie_messages_values = []
+    for each in list_results:
+        member_values.append(each.id)
+        heart_values.append(each.heart.num_received)
+        laugh_values.append(each.laugh.num_received)
+        wow_values.append(each.wow.num_received)
+        cry_values.append(each.cry.num_received)
+        angry_values.append(each.angry.num_received)
+        thumbs_up_values.append(each.thumbs_up.num_received)
+        thumbs_down_values.append(each.thumbs_down.num_received)
+        pie_delete_values.append(each.num_deleted)
+        pie_messages_values.append(each.num_comments)
+
+    return render_template('result.html', title='Your Chat', member_values=member_values, heart_values=heart_values,
+                           laugh_values=laugh_values, wow_values=wow_values, cry_values=cry_values,
+                           angry_values=angry_values, thumbs_up_values=thumbs_up_values,
+                           thumbs_down_values=thumbs_down_values, pie_messages_values=pie_messages_values,
+                           pie_delete_values=pie_delete_values, len=len(member_values))

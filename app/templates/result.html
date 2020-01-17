@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block scripts %}
+    <script src="{{url_for('static', filename='Chart.min.js')}}"></script>
+    <script src="{{url_for('static', filename='palette.js')}}"></script>
+    <script>
+        var chartData = {
+            labels: [{% for each in member_values %}"{{each}}",{% endfor %}],
+            datasets: [{
+                label: "Heart",
+                backgroundColor: "rgb(255,0,232,0.4)",
+                stack: 'Stack 0',
+                data: [
+                    {% for each in heart_values%}
+                        {{each}},
+                    {% endfor %}
+                ]
+            },{
+                label: "Laugh",
+                backgroundColor: "rgb(245,230,57,0.4)",
+                stack: 'Stack 1',
+                data: [
+                    {% for each in laugh_values%}
+                        {{each}},
+                    {% endfor %}
+                ]
+            },{
+                label: "Wow",
+                backgroundColor: "rgb(55,225,211,0.4)",
+                stack: 'Stack 2',
+                data: [
+                    {% for each in wow_values%}
+                        {{each}},
+                    {% endfor %}
+                ]
+            },{
+            label: "Cry",
+                stack: 'Stack 3',
+                backgroundColor: "rgb(7,28,161,0.4)",
+                data: [
+                    {% for each in cry_values%}
+                        {{each}},
+                    {% endfor %}
+                ]
+            },{
+            label: "Angry",
+                stack: 'Stack 4',
+                backgroundColor: "rgb(161,7,280.4)",
+                data: [
+                    {% for each in angry_values%}
+                        {{each}},
+                    {% endfor %}
+                ]
+            },{
+            label: "Thumbs Up",
+                stack: 'Stack 5',
+                backgroundColor: "rgb(28,204,19,0.4)",
+                data: [
+                    {% for each in thumbs_up_values%}
+                        {{each}},
+                    {% endfor %}
+                ]
+            },{
+            label: "Thumbs Down",
+                stack: 'Stack 6',
+                backgroundColor: "rgb(0,0,0,0.4)",
+                data: [
+                    {% for each in thumbs_down_values%}
+                        {{each}},
+                    {% endfor %}
+                ]
+            },
+            ]
+            }
+    Chart.defaults.global.animationSteps = 50;
+    Chart.defaults.global.tooltipYPadding = 16;
+    Chart.defaults.global.tooltipCornerRadius = 0;
+    Chart.defaults.global.tooltipTitleFontStyle = "normal";
+    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+    Chart.defaults.global.animationEasing = "easeOutBounce";
+    Chart.defaults.global.responsive = true;
+    Chart.defaults.global.scaleLineColor = "black";
+    Chart.defaults.global.scaleFontSize = 16;
+
+    var chartdivid =  document.getElementById("reaction_column").getContext('2d');
+
+    var reactBarChart = new Chart(chartdivid, {
+        type:'bar',
+        data: chartData
+        });
+    </script>
+
+    <script>
+        var apalette = palette('mpn65', {{len}});
+        var rgbpalette = [];
+        var i;
+        for (i = 0; i < apalette.length; i++) {
+            var bigint = parseInt(apalette[i], 16);
+            var r = (bigint >> 16) & 255;
+            var g = (bigint >> 8) & 255;
+            var b = bigint & 255;
+            rgbpalette.push("rgb(" + r + ", " + g + "," + b + ")")
+        }
+        var colors = [];
+        var pieChartDeleteData = {
+            datasets:[{
+                data:[
+                {% for each in pie_delete_values %}
+                    {{each}},
+                {% endfor %}
+                ],
+                backgroundColor: rgbpalette
+                ,
+            }],
+            labels: [
+               {% for each in member_values %}
+                    "{{each}}",
+                {% endfor %}
+            ]
+        };
+
+        var deloptions = {
+            title: {
+            display : true,
+            text : 'Deleted Messages in Chat'
+            },
+            segmentShowStroke : false,
+            animateScale : true,
+
+        };
+
+    var delPieChartDiv =  document.getElementById("deleted_pie_chart").getContext('2d');
+
+    var reactBarChart = new Chart(delPieChartDiv, {
+        type:'pie',
+        data: pieChartDeleteData,
+        options: deloptions,
+        });
+    </script>
+    <script>
+        var bpalette = palette('mpn65',{{len}});
+        var rgbpalette = [];
+        var i;
+        for (i = 0; i < bpalette.length; i++) {
+            var bigint = parseInt(bpalette[i], 16);
+            var r = (bigint >> 16) & 255;
+            var g = (bigint >> 8) & 255;
+            var b = bigint & 255;
+            rgbpalette.push("rgb(" + r + ", " + g + "," + b + ")")
+        }
+        var colors = [];
+        var pieChartMessagesData = {
+            datasets:[{
+                data:[
+                {% for each in pie_messages_values %}
+                    {{each}},
+                {% endfor %}
+                ],
+                backgroundColor: rgbpalette
+                ,
+            }],
+            labels: [
+               {% for each in member_values %}
+                    "{{each}}",
+                {% endfor %}
+            ]
+        };
+
+        var mesoptions = {
+            title: {
+            display : true,
+            text : 'Message Activity'
+            },
+            segmentShowStroke : false,
+            animateScale : true,
+
+        };
+
+    var piechartdiv =  document.getElementById("messages_pie_chart").getContext('2d');
+
+    var reactBarChart = new Chart(piechartdiv, {
+        type:'pie',
+        data: pieChartMessagesData,
+        options: mesoptions,
+        });
+    </script>
+    {{super()}}
+{% endblock %}
+
+{% block app_content %}
+    <div class="cotainer">
+        <canvas id="reaction_column"></canvas><br>
+        <canvas id="deleted_pie_chart"></canvas><canvas id="messages_pie_chart"></canvas>
+    </div>
+{% endblock %}

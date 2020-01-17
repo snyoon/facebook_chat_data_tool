@@ -1,8 +1,16 @@
-
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
 {% if title %}{{ title }} - Facebook Chat Data Tool{% else %}{{ _('Facebook Chat Data Tool') }}{% endif %}
+{% endblock %}
+
+{% block meta %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('static', filename='Chart.min.css')}}">
 {% endblock %}
 
 {% block navbar %}

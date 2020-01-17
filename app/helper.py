@@ -1,3 +1,6 @@
+from flask_googlecharts import ColumnChart
+
+
 # Function to turn unicode into a string representation
 # Returns a string of reaction types or empty string.
 def react_classifier(react):
@@ -13,7 +16,7 @@ def react_classifier(react):
         return 'laugh'
     elif react == "\u00f0\u009f\u0098\u00a2":
         return 'cry'
-    elif react == "\u00f0\u009f\u0098\u008d":
+    elif react == "\u00f0\u009f\u0098\u008d" or react == "\u00e2\u009d\u00a4":
         return 'heart'
     else:
         return ''
@@ -29,3 +32,9 @@ def react_compare(person, counter, react):
         return True
     else:
         return False
+
+
+def react_chart_row_filler(chart, person):
+    chart.append([person.id, person.heart.num_received, person.laugh.num_received, person.wow.num_received,
+                  person.cry.num_received, person.angry.num_received, person.thumbs_up.num_received,
+                  person.thumbs_down.num_received])
