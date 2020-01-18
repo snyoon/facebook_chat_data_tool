@@ -18,6 +18,7 @@ def home():
         filenames = []
         names = request.files.getlist(form.json_facebook_file.name)
         for file in form.json_facebook_file.data:
+            # kicks out if files is not json (very weak)
             if 'json'not in str(file.filename):
                 return redirect(url_for('main.readme'))
             file_names = secure_filename(file.filename)
