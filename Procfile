@@ -1,1 +1,1 @@
-web: gunicorn facebook_chata_data_tool:app
+web: gunicorn app:app
