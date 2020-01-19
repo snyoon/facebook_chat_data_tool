@@ -10,3 +10,4 @@ class Config(object):
     ACCESS_KEY = 'AKIAIGHM2SS7UAA4A4YQ'
     SECRET_ACCESS_KEY = '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'
     RANDOM_DIRECTORY = random.randint(1,10000000)
+    LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
