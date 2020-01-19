@@ -7,7 +7,7 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'devkey'
     UPLOAD_FOLDER = os.path.join(basedir, 'tmp')
     FLASKS3_BUCKET_NAME = 'facebook-chat-data-tool-bucket'
-    ACCESS_KEY = 'AKIAIGHM2SS7UAA4A4YQ'
-    SECRET_ACCESS_KEY = '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'
+    ACCESS_KEY = 'kek'
+    SECRET_ACCESS_KEY = 'H/keke'
     RANDOM_DIRECTORY = random.randint(1,10000000)
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
