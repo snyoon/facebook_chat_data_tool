@@ -8,11 +8,18 @@ from app.main import bp
 from app.classes import Person, Reaction, ReactCounter
 from app.helper import react_classifier, react_compare, react_chart_row_filler
 from werkzeug.utils import secure_filename
+import boto3
 
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/home', methods=['GET', 'POST'])
 def home():
+    # s3 = boto3.client(
+    #     "s3",
+    #     aws_access_key_id=current_app.config['ACCESS_KEY'],
+    #     aws_secret_access_key=current_app.config['SECRET_ACCESS_KEY']
+    # )
+    # bucket_resource = s3
     form = FacebookChatUpload()
     if form.validate_on_submit():
         filenames = []
@@ -26,6 +33,12 @@ def home():
             stringbleh = bleh.decode("utf-8")
             with open(os.path.join(current_app.config['UPLOAD_FOLDER'], file_names), 'w+') as json_file:
                 json.dump(stringbleh, json_file)
+            # bucket_resource.upload_file(
+            #     Bucket=current_app.config['FLASKS3_BUCKET_NAME'],
+            #     Filename=os.path.join(current_app.config['UPLOAD_FOLDER'], file_names),
+            #     Key=str(current_app.config['RANDOM_DIRECTORY'])+'/'+file_names
+            # )
+
         return redirect(url_for('main.results'))
     return render_template('home.html', title='Home', form=form)
 
@@ -42,6 +55,7 @@ def results():
     messages = None
     messages = []
     react_types = ['thumbs_up', 'angry', 'wow', 'laugh', 'cry', 'heart']
+
     for filename in os.listdir(current_app.config['UPLOAD_FOLDER']):
         with open(os.path.join(current_app.config['UPLOAD_FOLDER'], filename)) as json_file:
             stringdata = json.load(json_file)
