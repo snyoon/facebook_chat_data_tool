@@ -31,6 +31,7 @@ def home():
             file_names = secure_filename(file.filename)
             bleh = file.stream.read()
             stringbleh = bleh.decode("utf-8")
+            print(os.path.join(current_app.config['UPLOAD_FOLDER'], file_names))
             with open(os.path.join(current_app.config['UPLOAD_FOLDER'], file_names), 'w') as json_file:
                 json.dump(stringbleh, json_file)
             # bucket_resource.upload_file(
