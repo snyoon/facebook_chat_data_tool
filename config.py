@@ -9,4 +9,4 @@ class Config(object):
     FLASKS3_BUCKET_NAME = 'facebook-chat-data-tool-bucket'
     ACCESS_KEY = 'AKIAIGHM2SS7UAA4A4YQ'
     SECRET_ACCESS_KEY = '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'
-    RANDOM_DIRECTORY = random.randint(1,100000000)
+    RANDOM_DIRECTORY = random.randint(1,10000000)
